@@ -9,6 +9,18 @@ const userSchema = new mongoose.Schema({
   },
   value: {
     type: Number
+  },
+  location_string: {
+    type:String
+  },
+  location: {
+    type: {
+        type: String,
+        enum: ['Point']
+    },
+    coordinates: {
+        type: [Number]
+    }
   }
 });
 

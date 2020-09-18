@@ -1,3 +1,5 @@
 /api/node_modules
 /node_modules
 /data
+/media
+.session.data.json

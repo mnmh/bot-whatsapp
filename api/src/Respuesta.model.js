@@ -2,24 +2,30 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const respuestaSchema = new mongoose.Schema({
-    variante: {
+    tipo: {
         type: String
     },
-    id_entrada: {
-        type: Schema.Types.ObjectID,
-        ref: 'Entrada'
+    content: {
+        type: String
+    },
+    time: {
+        type: Number
+    },
+    location_string: {
+        type:String
     },
     location: {
         type: {
             type: String,
-            enum: ['Point'],
-            required: true
+            enum: ['Point']
         },
         coordinates: {
-            type: [Number],
-            required: true
+            type: [Number]
         }
-    }
+    },
+    from: {
+        type: String
+    },
 });
 
 const Respuesta = mongoose.model("Respuesta", respuestaSchema);

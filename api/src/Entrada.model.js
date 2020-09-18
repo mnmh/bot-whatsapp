@@ -18,6 +18,15 @@ const entradaSchema = new mongoose.Schema({
   },
   value: {
     type: Number
+  },
+  location: {
+    type: {
+      type: String,
+      enum: ['Point']
+    },
+    coordinates: {
+      type: [Number]
+    }
   }
 });
 
