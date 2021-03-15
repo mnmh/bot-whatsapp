@@ -15,6 +15,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.6.1",
+    "node-fetch": "^2.6.1",
     "node-sass": "^4.13.1",
     "validator": "^12.2.0"
   },

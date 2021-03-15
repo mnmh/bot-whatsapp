@@ -1,4 +1,5 @@
 const express = require("express");
+const fetch = require('node-fetch')
 const app = express();
 const connectDb = require("./src/connection");
 const cors = require('cors');
@@ -11,6 +12,47 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const PORT = 4001;
+
+function quitarAcentos(cadena){
+	const acentos = {'á':'a','é':'e','í':'i','ó':'o','ú':'u','Á':'A','É':'E','Í':'I','Ó':'O','Ú':'U'};
+	return cadena.split('').map( letra => acentos[letra] || letra).join('').toString().replace('ñ', 'n');	
+}
+
+
+app.get("/procesar", async (req, res) => {
+  const entradas = await Respuesta.find({"location_string": {"$exists": true}, 'tipo': "chat"});
+  let resp = []
+  
+
+  entradas.map(e => {
+    if(e.location_string){
+      let arcgis_sugg_path = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest?f=json&text="+quitarAcentos(e.location_string)+"&maxSuggestions=1"
+      let arcgis_geo_path = "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&magicKey="
+      fetch(arcgis_sugg_path)
+      .then(resp => resp.json())
+      .then(data => {
+
+          fetch(arcgis_geo_path + data.suggestions[0].magicKey)
+          .then(resp => resp.json())
+          .then(data => {
+              console.log(data.candidates[0].location.x)
+              Respuesta.findOneAndUpdate({from: e.from, time: e.time},{
+                "location": {
+                  "type": "Point",
+                  "coordinates": [data.candidates[0].location.y, data.candidates[0].location.x]
+                }
+              }).then(res => {
+
+                console.log(JSON.stringify(res))
+              })
+          })
+      })
+    }
+    
+  })
+
+  res.json(entradas);
+})
 
 // @route   GET /entradas
 // @desc    dar todas las entradas
