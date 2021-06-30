@@ -1,0 +1,11 @@
+{
+  "name": "bot_mmc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mnmh/bot-whatsapp.git",
+  "author": "Nestor Andres Pena <nestor2509@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@open-wa/wa-automate": "^3.5.0"
+  }
+}
