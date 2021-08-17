@@ -35,24 +35,13 @@ function start(client: Client) {
         coordinates: [lng, lat]
       }
     }
-/*
-    if(message.type === 'string'){
-      const {
-        loc,
-        nombre
-      } = message
-      json_['nick'] = {
-        type: "Text",
-        content: nombre
-      }
-    }
-*/
+
     const r = await axios.post(apiUrl + "/crear-entrada", json_).catch(err=>{
       console.log(err)
     })
 
     if(r.data.value === 1) {
-      await client.sendText(message.from, 'El bot del Museo de Memoria de Colombia le da la bienvenida a la exposición _SaNaciones: diálogos de la memoria_. Por este medio, podrá conocer más acerca de los contenidos y participar en la conversación sobre sanación y construcción de memoria.\nA lo largo de la actividad se le presentarán opciones para que usted explore la exposición o comparta sus experiencias. Las opciones estarán indicadas por números para que usted responda sobre este chat. Solo tendrá que contestar a los mensajes con el número de opción que desee.\n*1* ¿Qué es Sanaciones?.\n*2* Caminos de la exposición.\n*3* Haz parte de la exposición.');
+      await client.sendText(message.from, 'El bot del Museo de Memoria de Colombia le da la bienvenida a la exposición _SaNaciones: diálogos de la memoria_. Por este medio, podrá conocer más acerca de los contenidos y participar en la conversación sobre sanación y construcción de memoria.\nA lo largo de la actividad se le presentarán opciones para que usted explore la exposición o comparta sus experiencias. Las opciones estarán indicadas por números para que usted responda sobre este chat. Solo tendrá que contestar a los mensajes con el número de opción que desee.\n*1* ¿Qué es Sanaciones?.\n*2* Caminos de la exposición.\n*3* Participar de la exposición.');
     } 
     else if(message.content === '1' && r.data.state === '') {
       await axios.post(apiUrl + "/update-status", {from: message.from, state: 'Info'}).catch(err=>{
@@ -177,16 +166,11 @@ function start(client: Client) {
       await axios.post(apiUrl + "/update-status", {from: message.from, state: 'esperando_con'}).catch(err=>{
         console.log(err)
       })
-      await client.sendText(message.from, 'Entre todos creamos el mapa de la SaNación! Ya somos 123 participantes! \n Tu opinión será totalmente anónima. \n ¿Cómo sanar las heridas del conflicto armado? Cuéntanos qué piensas con un texto, una imagen o un video.');
-      await client.sendText(message.from, 'Consulte los términos y condiciones  Mapa de SaNaciones en el sitio web www.museodememoria.gov.co/sanaciones');
-      await client.sendText(message.from, '¿Quieres participar? \n*1* Sí, quiero participar.\n*2* No, quiero volver.');
-      
+      await client.sendText(message.from, 'Este mapa se construye con su ayuda. Queremos que nos cuente, según su experiencia: ¿Cómo sanar las heridas del conflicto armado? Su respuesta podrá ser publicada  en el sitio web www.museodememoria.gov.co/sanaciones en el apartado mapa SaNaciones.\nPara participar, debe aceptar el uso de los datos personales que envíe por este medio, de acuerdo a la ley 1581 de 2012 y demás normas concordantes.\n*1* Está de acuerdo.\n*2* No está de acuerdo.');
     } else if(r.data.state === 'esperando_con') {
       if(message.content === '1'){
-        await client.sendText(message.from, 'Excelente! Entendemos que leíste y aceptas los término y condiciones del ejercicio');
-        await client.sendText(message.from, 'Consulte los términos y condiciones  Mapa de SaNaciones en el sitio web www.museodememoria.gov.co/sanaciones');
-        await client.sendText(message.from, '¿Con qué nombre quieres aparecer? Puede ser el nombre que prefieras o un seudónimo \n Ejemplo: Angelita');
-        await axios.post(apiUrl + "/update-status", {from: message.from, state: 'esperando_nom'}).catch(err=>{
+        await client.sendText(message.from, 'Usted ha elegido compartir su participación. ¡Le damos la bienvenida a la conversación!\nAhora díganos: ¿Dónde se encuentra?')
+        await axios.post(apiUrl + "/update-status", {from: message.from, state: 'esperando_loc'}).catch(err=>{
           console.log(err)
         })
       } else if(message.content === '2'){
@@ -194,10 +178,10 @@ function start(client: Client) {
         await axios.post(apiUrl + "/update-status", {from: message.from, state: ''}).catch(err=>{
           console.log(err)
         })
-      } //else {
-        //await client.sendText(message.from, '*1* Está de acuerdo.\n*2* No está de acuerdo.')
-        //}
-    } else if(r.data.state === 'esperando_nom') {
+      } else {
+        await client.sendText(message.from, '*1* Está de acuerdo.\n*2* No está de acuerdo.')
+      }
+    } else if(r.data.state === 'esperando_loc') {
       console.log("resp 4")
       if(message.type === 'location'){
         const resp = await axios.post(apiUrl + "/update-status", {from: message.from, state: 'esperando_contenido', location: json_['location']}).catch(err=>{

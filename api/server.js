@@ -168,7 +168,5 @@ app.listen(PORT, function() {
 
   connectDb().then(() => {
     console.log("Base de datos conectada");
-  }).catch((err) => {
-    console.log("Not Connected to Database ERROR! ", err);
-});
+  });
 });
