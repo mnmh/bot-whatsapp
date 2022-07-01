@@ -6,6 +6,7 @@
   "author": "Nestor Andres Pena <nestor2509@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@open-wa/wa-automate": "^3.5.0"
+    "@open-wa/wa-automate": "^4.42.2",
+    "nodemailer": "^6.7.6"
   }
 }
